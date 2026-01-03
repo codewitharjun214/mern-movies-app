@@ -14,11 +14,29 @@ function AddMovie() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     try {
-      await api.post("/movies", movie);
+      const token = localStorage.getItem("token");
+
+      await api.post(
+        "/movies",
+        {
+          title: movie.title,
+          description: movie.description,
+          rating: Number(movie.rating),
+          runtime: Number(movie.duration),
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
       alert("Movie added successfully");
       navigate("/movies");
     } catch (err) {
+      console.error(err);
       alert("Failed to add movie");
     }
   };
