@@ -1,3 +1,7 @@
+## Live Demo
+Frontend: https://akmoviesapp.netlify.app  
+Backend API: https://mern-movies-app-x7wa.onrender.com
+
 ## Output --
 For user --1 <img width="1914" height="911" alt="image" src="https://github.com/user-attachments/assets/833ddf7f-8b29-42b9-ade4-05a008d03ee1" />
            2 <img width="1897" height="888" alt="image" src="https://github.com/user-attachments/assets/469d24a2-981e-44b3-a153-cc605c9a7298" />
