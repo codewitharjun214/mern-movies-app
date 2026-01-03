@@ -1,49 +1,47 @@
+const axios = require("axios");
 const Movie = require("../models/Movie");
 
-// GET all movies
-exports.getAllMovies = async (req, res) => {
+exports.importFromTMDB = async (req, res) => {
   try {
-    const movies = await Movie.find();
-    res.json(movies);
-  } catch (err) {
-    res.status(500).json({ message: "Server error" });
-  }
-};
+    const page = req.query.page || 1;
 
-// ADD movie (ADMIN)
-exports.addMovie = async (req, res) => {
-  try {
-    const { title, description, rating, runtime } = req.body;
+    const response = await axios.get(
+      "https://api.themoviedb.org/3/movie/popular",
+      {
+        params: {
+          api_key: process.env.TMDB_API_KEY,
+          page,
+        },
+      }
+    );
 
-    const movie = new Movie({
-      title,
-      description,
-      rating,
-      runtime,
+    const movies = response.data.results;
+    let inserted = 0;
+
+    for (let m of movies) {
+      const exists = await Movie.findOne({ title: m.title });
+      if (exists) continue;
+
+      await Movie.create({
+        title: m.title,
+        description: m.overview,
+        rating: m.vote_average,
+        runtime: 120, // TMDB popular API doesn't provide runtime
+        poster: m.poster_path
+          ? `https://image.tmdb.org/t/p/w500${m.poster_path}`
+          : "",
+      });
+
+      inserted++;
+    }
+
+    res.json({
+      message: "TMDB movies imported successfully",
+      page,
+      inserted,
     });
-
-    await movie.save();
-    res.status(201).json(movie);
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: "Failed to add movie" });
+    console.error(err.message);
+    res.status(500).json({ message: "TMDB import failed" });
   }
-};
-
-// SEARCH movies
-exports.searchMovies = async (req, res) => {
-  const { q } = req.query;
-  const movies = await Movie.find({
-    title: { $regex: q, $options: "i" },
-  });
-  res.json(movies);
-};
-
-// SORT movies
-exports.sortMovies = async (req, res) => {
-  const { by, order } = req.query;
-  const sort = {};
-  sort[by] = order === "asc" ? 1 : -1;
-  const movies = await Movie.find().sort(sort);
-  res.json(movies);
 };
