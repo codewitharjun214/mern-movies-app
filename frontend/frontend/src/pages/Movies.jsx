@@ -10,7 +10,7 @@ const Movies = () => {
   const [searchText, setSearchText] = useState("");
   const role = localStorage.getItem("role");
 
-  // Load all movies on page load
+  // Load all movies
   useEffect(() => {
     fetchMovies();
   }, []);
@@ -78,6 +78,27 @@ const Movies = () => {
     }
   };
 
+  // 🗑️ ADMIN: Delete movie
+  const deleteMovie = async (id) => {
+    if (!window.confirm("Are you sure you want to delete this movie?")) return;
+
+    try {
+      const token = localStorage.getItem("token");
+
+      await api.delete(`/movies/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      alert("Movie deleted successfully");
+      fetchMovies();
+    } catch (err) {
+      console.error(err);
+      alert("Failed to delete movie");
+    }
+  };
+
   return (
     <div style={{ padding: "20px" }}>
       <h2>🎬 Movies</h2>
@@ -139,6 +160,24 @@ const Movies = () => {
           <p>⭐ Rating: {movie.rating}</p>
           <p>📅 Year: {movie.year || "N/A"}</p>
           <p>⏱ Runtime: {movie.runtime} min</p>
+
+          {/* 🗑️ Admin Delete Button */}
+          {role === "admin" && (
+            <button
+              onClick={() => deleteMovie(movie._id)}
+              style={{
+                marginTop: "8px",
+                background: "#dc2626",
+                color: "white",
+                border: "none",
+                padding: "6px 10px",
+                borderRadius: "4px",
+                cursor: "pointer",
+              }}
+            >
+              Delete
+            </button>
+          )}
         </div>
       ))}
     </div>

@@ -26,16 +26,27 @@ exports.deleteMovie = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const movie = await Movie.findByIdAndDelete(id);
+    console.log("DELETE movie id:", id); // 👈 DEBUG
+
+    if (!id) {
+      return res.status(400).json({ message: "Movie ID is required" });
+    }
+
+    const movie = await Movie.findById(id);
+
     if (!movie) {
       return res.status(404).json({ message: "Movie not found" });
     }
 
+    await Movie.findByIdAndDelete(id);
+
     res.json({ message: "Movie deleted successfully" });
   } catch (err) {
+    console.error("DELETE ERROR:", err.message); // 👈 IMPORTANT
     res.status(500).json({ message: "Failed to delete movie" });
   }
 };
+
 
 // ✅ SEARCH movies
 exports.searchMovies = async (req, res) => {
