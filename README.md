@@ -2,20 +2,6 @@
 Frontend: https://akmoviesapp.netlify.app  
 Backend API: https://mern-movies-app-x7wa.onrender.com
 
-## Output --
-For user --1 <img width="1914" height="911" alt="image" src="https://github.com/user-attachments/assets/833ddf7f-8b29-42b9-ade4-05a008d03ee1" />
-           2 <img width="1897" height="888" alt="image" src="https://github.com/user-attachments/assets/469d24a2-981e-44b3-a153-cc605c9a7298" />
-
-For Admin --1 <img width="1911" height="902" alt="image" src="https://github.com/user-attachments/assets/4df473b4-bef4-41a3-b220-6d36ac5fe38c" />
-            2 <img width="1889" height="872" alt="image" src="https://github.com/user-attachments/assets/c3477ab3-05c6-4ec2-93e4-e140b73c581f" />
-            3 <img width="1865" height="955" alt="image" src="https://github.com/user-attachments/assets/07eb80d1-193c-4f2b-a67d-d027d74f29c9" />
-
-
-
-
-
-
-
 
 # MERN Movies Application
 
