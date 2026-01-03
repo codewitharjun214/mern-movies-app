@@ -6,7 +6,8 @@ const {
   addMovie,
   searchMovies,
   sortMovies,
-  importFromTMDB,   // 👈 ADD THIS
+  importFromTMDB,
+  deleteMovie, // 👈 ADD THIS
 } = require("../controllers/movie.controller");
 
 router.get("/", getAllMovies);
@@ -15,7 +16,10 @@ router.post("/", addMovie);
 router.get("/search", searchMovies);
 router.get("/sort", sortMovies);
 
-// 🔥 THIS WAS MISSING
+// 🔥 TMDB bulk import
 router.post("/import/tmdb", importFromTMDB);
+
+// 🗑️ DELETE movie (ADMIN)
+router.delete("/:id", deleteMovie);
 
 module.exports = router;

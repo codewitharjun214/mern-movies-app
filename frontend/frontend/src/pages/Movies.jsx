@@ -1,13 +1,14 @@
 import { useEffect, useState } from "react";
-import {
+import api, {
   getAllMovies,
   searchMovies,
-  sortMovies
+  sortMovies,
 } from "../services/api";
 
 const Movies = () => {
   const [movies, setMovies] = useState([]);
   const [searchText, setSearchText] = useState("");
+  const role = localStorage.getItem("role");
 
   // Load all movies on page load
   useEffect(() => {
@@ -54,9 +55,50 @@ const Movies = () => {
     }
   };
 
+  // 🔥 ADMIN: Import movies from TMDB
+  const importFromTMDB = async () => {
+    try {
+      const token = localStorage.getItem("token");
+
+      const res = await api.post(
+        "/movies/import/tmdb?page=1",
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      alert(`Imported ${res.data.inserted} movies`);
+      fetchMovies();
+    } catch (err) {
+      console.error(err);
+      alert("Failed to import movies");
+    }
+  };
+
   return (
     <div style={{ padding: "20px" }}>
       <h2>🎬 Movies</h2>
+
+      {/* 🔥 Admin Import Button */}
+      {role === "admin" && (
+        <button
+          onClick={importFromTMDB}
+          style={{
+            padding: "8px 14px",
+            marginBottom: "15px",
+            background: "#16a34a",
+            color: "white",
+            border: "none",
+            borderRadius: "5px",
+            cursor: "pointer",
+          }}
+        >
+          Import Movies from TMDB
+        </button>
+      )}
 
       {/* Search & Sort Controls */}
       <div style={{ marginBottom: "20px" }}>
@@ -89,13 +131,13 @@ const Movies = () => {
             border: "1px solid #ccc",
             padding: "12px",
             marginBottom: "12px",
-            borderRadius: "5px"
+            borderRadius: "5px",
           }}
         >
           <h3>{movie.title}</h3>
           <p>{movie.description}</p>
           <p>⭐ Rating: {movie.rating}</p>
-          <p>📅 Year: {movie.year}</p>
+          <p>📅 Year: {movie.year || "N/A"}</p>
           <p>⏱ Runtime: {movie.runtime} min</p>
         </div>
       ))}
