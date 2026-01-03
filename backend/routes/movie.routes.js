@@ -1,16 +1,14 @@
-const router = require("express").Router();
+const express = require("express");
+const router = express.Router();
+
 const {
-  getMovies,
-  addMovie,
-  updateMovie,
-  deleteMovie,
+  getAllMovies,
+  searchMovies,
+  sortMovies
 } = require("../controllers/movie.controller");
 
-const { protect, adminOnly } = require("../middleware/auth.middleware");
-
-router.get("/", protect, getMovies);
-router.post("/", protect, adminOnly, addMovie);
-router.put("/:id", protect, adminOnly, updateMovie);
-router.delete("/:id", protect, adminOnly, deleteMovie);
+router.get("/", getAllMovies);
+router.get("/search", searchMovies);
+router.get("/sort", sortMovies);
 
 module.exports = router;

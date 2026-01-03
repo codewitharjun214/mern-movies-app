@@ -1,23 +1,46 @@
 const Movie = require("../models/Movie");
 
-exports.getMovies = async (_, res) => {
-  const movies = await Movie.find();
-  res.json(movies);
+// GET ALL MOVIES
+exports.getAllMovies = async (req, res) => {
+  try {
+    const movies = await Movie.find();
+    res.status(200).json(movies);
+  } catch (error) {
+    res.status(500).json({ message: "Failed to fetch movies" });
+  }
 };
 
-exports.addMovie = async (req, res) => {
-  const movie = await Movie.create(req.body);
-  res.json(movie);
+// SEARCH MOVIES
+exports.searchMovies = async (req, res) => {
+  try {
+    const { q } = req.query;
+
+    const movies = await Movie.find({
+      $or: [
+        { title: { $regex: q, $options: "i" } },
+        { description: { $regex: q, $options: "i" } }
+      ]
+    });
+
+    res.status(200).json(movies);
+  } catch (error) {
+    res.status(500).json({ message: "Search failed" });
+  }
 };
 
-exports.updateMovie = async (req, res) => {
-  const movie = await Movie.findByIdAndUpdate(req.params.id, req.body, {
-    new: true,
-  });
-  res.json(movie);
-};
+// SORT MOVIES
+exports.sortMovies = async (req, res) => {
+  try {
+    const { by, order } = req.query;
 
-exports.deleteMovie = async (req, res) => {
-  await Movie.findByIdAndDelete(req.params.id);
-  res.json({ message: "Deleted" });
+    const sortOrder = order === "desc" ? -1 : 1;
+
+    const movies = await Movie.find().sort({
+      [by]: sortOrder
+    });
+
+    res.status(200).json(movies);
+  } catch (error) {
+    res.status(500).json({ message: "Sorting failed" });
+  }
 };

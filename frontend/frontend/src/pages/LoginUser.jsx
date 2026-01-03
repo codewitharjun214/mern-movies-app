@@ -8,22 +8,50 @@ export default function LoginUser() {
   const nav = useNavigate();
 
   const login = async () => {
-    const res = await api.post("/auth/login", { email, password });
-    localStorage.setItem("token", res.data.token);
-    localStorage.setItem("role", res.data.user.role);
-    nav("/movies");
+    try {
+      const res = await api.post("/auth/login", { email, password });
+
+      if (res.data.user.role !== "user") {
+        alert("Not a user");
+        return;
+      }
+
+      localStorage.setItem("token", res.data.token);
+      localStorage.setItem("role", "user");
+
+      nav("/movies");
+    } catch (err) {
+      alert("Invalid credentials");
+    }
   };
 
   return (
     <div className="card">
-      <h2>Login Page</h2>
-      <input onChange={(e) => setEmail(e.target.value)} placeholder="Email" />
+      <h2>User Login</h2>
+
+      <input
+        placeholder="Email"
+        onChange={(e) => setEmail(e.target.value)}
+      />
+
       <input
         type="password"
-        onChange={(e) => setPassword(e.target.value)}
         placeholder="Password"
+        onChange={(e) => setPassword(e.target.value)}
       />
+
       <button onClick={login}>Login</button>
+
+      {/* 👇 ADD THIS */}
+      <p style={{ marginTop: "10px" }}>
+        Are you an admin?{" "}
+        <span
+          style={{ color: "cyan", cursor: "pointer" }}
+          onClick={() => nav("/admin")}
+        >
+          Login here
+        </span>
+      </p>
     </div>
   );
 }

@@ -5,11 +5,11 @@ import {
   sortMovies
 } from "../services/api";
 
-const Movies = () => {
+const Home = () => {
   const [movies, setMovies] = useState([]);
   const [searchText, setSearchText] = useState("");
 
-  // Load all movies on page load
+  // Load all movies initially
   useEffect(() => {
     fetchMovies();
   }, []);
@@ -23,7 +23,7 @@ const Movies = () => {
     }
   };
 
-  // 🔍 SEARCH
+  // SEARCH
   const handleSearch = async (value) => {
     setSearchText(value);
 
@@ -40,7 +40,7 @@ const Movies = () => {
     }
   };
 
-  // 🔃 SORT
+  // SORT
   const handleSort = async (value) => {
     if (!value) return;
 
@@ -58,7 +58,7 @@ const Movies = () => {
     <div style={{ padding: "20px" }}>
       <h2>🎬 Movies</h2>
 
-      {/* Search & Sort Controls */}
+      {/* Search + Sort */}
       <div style={{ marginBottom: "20px" }}>
         <input
           type="text"
@@ -80,27 +80,28 @@ const Movies = () => {
       </div>
 
       {/* Movies List */}
-      {movies.length === 0 && <p>No movies found.</p>}
+      <div>
+        {movies.length === 0 && <p>No movies found.</p>}
 
-      {movies.map((movie) => (
-        <div
-          key={movie._id}
-          style={{
-            border: "1px solid #ccc",
-            padding: "12px",
-            marginBottom: "12px",
-            borderRadius: "5px"
-          }}
-        >
-          <h3>{movie.title}</h3>
-          <p>{movie.description}</p>
-          <p>⭐ Rating: {movie.rating}</p>
-          <p>📅 Year: {movie.year}</p>
-          <p>⏱ Runtime: {movie.runtime} min</p>
-        </div>
-      ))}
+        {movies.map((movie) => (
+          <div
+            key={movie._id}
+            style={{
+              border: "1px solid #ccc",
+              padding: "10px",
+              marginBottom: "10px"
+            }}
+          >
+            <h3>{movie.title}</h3>
+            <p>{movie.description}</p>
+            <p>⭐ Rating: {movie.rating}</p>
+            <p>📅 Year: {movie.year}</p>
+            <p>⏱ Runtime: {movie.runtime} min</p>
+          </div>
+        ))}
+      </div>
     </div>
   );
 };
 
-export default Movies;
+export default Home;

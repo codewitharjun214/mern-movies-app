@@ -1,13 +1,13 @@
 import axios from "axios";
 
-const api = axios.create({
-  baseURL: "http://localhost:5000/api",
+const API = axios.create({
+  baseURL: "http://localhost:5000/api"
 });
 
-api.interceptors.request.use((req) => {
-  const token = localStorage.getItem("token");
-  if (token) req.headers.Authorization = `Bearer ${token}`;
-  return req;
-});
+export const getAllMovies = () => API.get("/movies");
+export const searchMovies = (query) =>
+  API.get(`/movies/search?q=${query}`);
+export const sortMovies = (by, order) =>
+  API.get(`/movies/sort?by=${by}&order=${order}`);
 
-export default api;
+export default API;
